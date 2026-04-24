@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Solicitud de Ambiente</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --surface: #0f1629;
+            --card: #131c35;
+            --border: #1e2d50;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59,130,246,0.15);
+            --cyan: #06b6d4;
+            --green: #10b981;
+            --green-glow: rgba(16,185,129,0.15);
+            --red: #ef4444;
+            --text: #e2e8f0;
+            --muted: #cdd4df;
+            --subtle: #1e2d50;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-glow);
+            border: 1px solid rgba(59,130,246,0.3);
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            padding: 5px 12px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .header-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.7); }
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+        .header h1 span { color: var(--primary); }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03),
+                0 24px 48px -12px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        .tab {
+            padding: 10px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+        .tab:not(.active):hover {
+            background: var(--subtle);
+            color: var(--text);
+        }
+
+        /* Section title */
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Form elements */
+        label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .field { margin-bottom: 16px; }
+
+        select, input[type="text"], input[type="time"] {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+        select:focus, input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        select option { background: #1a2540; }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* Tags */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-height: 40px;
+            padding: 8px;
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .tag-container:has(.tag) { border-style: solid; border-color: rgba(59,130,246,0.3); }
+        .empty-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            align-self: center;
+            padding: 2px 4px;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-glow);
+            border: 1px solid rgba(59,130,246,0.4);
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            animation: tag-in 0.15s ease;
+        }
+        @keyframes tag-in {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .tag .remove {
+            color: var(--red);
+            cursor: pointer;
+            font-size: 0.8rem;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+        .tag .remove:hover { opacity: 1; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* Send button */
+        .btn-enviar {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--green);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(16,185,129,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-enviar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.08);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .btn-enviar:hover:not(:disabled)::before { opacity: 1; }
+        .btn-enviar:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 2px 8px rgba(16,185,129,0.2); }
+        .btn-enviar:disabled { background: var(--subtle); box-shadow: none; opacity: 0.6; cursor: not-allowed; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120%);
+            background: #0f1629;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000;
+            white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: rgba(16,185,129,0.4); }
+        .toast.error { border-color: rgba(239,68,68,0.4); }
+        .toast-icon { font-size: 1.1rem; }
+        .toast-text { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+
+        /* Progress bar for sending */
+        .send-progress {
+            display: none;
+            margin-top: 10px;
+        }
+        .send-progress.visible { display: block; }
+        .progress-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .progress-bar {
+            height: 3px;
+            background: var(--subtle);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--cyan));
+            border-radius: 100px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        #seccionHora { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header">
+        <div class="header-badge">Sistema interno · Censys</div>
+        <h1>Solicitud de <span>Ambiente</span></h1>
+    </div>
+
+    <div class="card">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button type="button" id="tab1" class="tab active" onclick="cambiarSeccion('AMBIENTE')">🔧 Ambiente</button>
+            <button type="button" id="tab2" class="tab" onclick="cambiarSeccion('DEMO')">🖥️ Demo</button>
+        </div>
+
+        <!-- Banco + Ambiente -->
+        <div class="section-title">Configuración</div>
+        <div class="grid">
+            <div class="field">
+                <label>Banco</label>
+                <select id="banco">
+                    <option value="BSR">BSR</option>
+                    <option value="BMR">BMR</option>
+                    <option value="CMF">CMF</option>
+                    <option value="BSE">BSE</option>
+                    <option value="BP-PIANO">BP-PIANO</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Ambiente</label>
+                <select id="ambiente">
+                    <option value="TEST">TEST</option>
+                    <option value="DESA">DESA</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Hora (solo demo) -->
+        <div id="seccionHora" class="field">
+            <label>Hora de la Demo</label>
+            <input type="time" id="horaDemo" value="14:30">
+        </div>
+
+        <!-- Sucursal -->
+        <div class="field">
+            <label>Sucursal <span style="font-weight:400;opacity:0.5">(Opcional)</span></label>
+            <input type="text" id="sucursal" placeholder="Ej: 01">
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Sistemas -->
+        <div class="section-title">Sistemas</div>
+        <div class="field">
+            <label>Seleccionar sistemas</label>
+            <select id="selectSistemas" onchange="agregarTag(this)">
+                <option value="" disabled selected>Elegir para agregar...</option>
+                <option value="SG">1 – Seguridad</option>
+                <option value="CC">3 – Cuenta Corriente</option>
+                 <option value="CA">5 – Caja de Ahorro</option>
+                <option value="PF">4 – Plazo Fijo</option>
+                <option value="CR">2 – Credito</option>
+                <option value="CL">7 – Cliente</option>
+                <option value="Garantías">20 – Garantías</option>
+                <option value="Ingresos y Egresos Varios">24 – Ingresos y Egresos Varios</option>
+                <option value="Cta Cte en Otros Bcos">27 – Cta Cte en Otros Bcos</option>
+                <option value="Débitos Directos">56 – Débitos Directos</option>
+                <option value="Custodia de Valore">41 – Custodia de Valores</option>
+                <option value="Cámara">39 – Cámara</option>
+                <option value="Granel">38 – Granel</option>
+                <option value="Gestión de Cobro">40 – Gestión de Cobro</option>
+                <option value="Giros y Transferencias">54 – Giros y Transferencias</option>
+                <option value="IC">25 – Información al Central</option>
+                <option value="Tesoro y Tesorería">18 – Tesoro y Tesorería</option>
+                <option value="NIIF Valor Razonable">81 – NIIF Valor Razonable</option>
+                <option value="NIIF Costo Amortizado">82 – NIIF Costo Amortizado</option>
+                <option value="NIIF Costo Amortizado">83 – NIIF - Perdida Esperada</option>
+                <option value="Contabilidad">6 – Contabilidad</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div id="listaTags" class="tag-container">
+            <span class="empty-hint">Ningún sistema seleccionado</span>
+        </div>
+
+        <!-- Progress -->
+        <div class="send-progress" id="sendProgress">
+            <div class="progress-label" id="progressLabel">Enviando 0 / 0...</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <!-- Botón -->
+        <button type="button" id="btnEnviar" class="btn-enviar" onclick="enviar()">
+            🚀 Enviar Solicitud
+        </button>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">✅</span>
+    <span class="toast-text" id="toastText">Mensaje</span>
+</div>
+
+<script>
+    let modoActual = 'AMBIENTE';
+    let seleccionados = [];
+
+    // ─── EmailJS init ─────────────────────────────────────────
+    (function() { emailjs.init("eWZks18eBjEaSKKXz"); })();
+
+    // ─── Destinatario grupo ──grupo_funcionales@censys.com.ar──────davidjoaquin09@gmail.com───────────────────────────
+    const GRUPO = "grupo_funcionales@censys.com.ar";
+
+    // ─── Toast helper ─────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+        document.getElementById('toastText').textContent = msg;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // ─── Cambiar sección ──────────────────────────────────────
+    function cambiarSeccion(seccion) {
+        modoActual = seccion;
+        document.getElementById('tab1').classList.toggle('active', seccion === 'AMBIENTE');
+        document.getElementById('tab2').classList.toggle('active', seccion === 'DEMO');
+
+        const ambienteSelect = document.getElementById('ambiente');
+        const seccionHora    = document.getElementById('seccionHora');
+
+        if (seccion === 'DEMO') {
+            ambienteSelect.value    = "TEST";
+            ambienteSelect.disabled = true;
+            seccionHora.style.display = 'block';
+        } else {
+            ambienteSelect.disabled   = false;
+            seccionHora.style.display = 'none';
+        }
+    }
+
+    // ─── Tags ─────────────────────────────────────────────────
+    function agregarTag(el) {
+        if (el.value && !seleccionados.includes(el.value)) {
+            seleccionados.push(el.value);
+            actualizarVistaTags();
+        }
+        el.selectedIndex = 0;
+    }
+
+    function borrarTag(val) {
+        seleccionados = seleccionados.filter(i => i !== val);
+        actualizarVistaTags();
+    }
+
+    function actualizarVistaTags() {
+        const container = document.getElementById('listaTags');
+        if (seleccionados.length === 0) {
+            container.innerHTML = '<span class="empty-hint">Ningún sistema seleccionado</span>';
+        } else {
+            container.innerHTML = seleccionados.map(i => `
+                <div class="tag">
+                    ${i} <span class="remove" onclick="borrarTag('${i}')">✖</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    // ─── Envío ────────────────────────────────────────────────
+    // SOLUCIÓN: se envía un email por destinatario usando el campo
+    // "to_email" en templateParams, que el template usa como "To Email".
+    // Esto garantiza que TODOS reciben el correo sin depender
+    // del campo hardcodeado en EmailJS.
+    async function enviar() {
+        if (seleccionados.length === 0) {
+            showToast('Seleccioná al menos un sistema', 'error');
+            return;
+        }
+
+        const btn        = document.getElementById('btnEnviar');
+        const progress   = document.getElementById('sendProgress');
+        const progFill   = document.getElementById('progressFill');
+        const progLabel  = document.getElementById('progressLabel');
+
+        const banco      = document.getElementById('banco').value;
+        const ambiente   = document.getElementById('ambiente').value;
+        const suc        = document.getElementById('sucursal').value.trim();
+        const hora       = document.getElementById('horaDemo').value;
+        const sistemasStr = seleccionados.join(' - ');
+        const sucTexto   = suc ? ` - Suc ${suc.padStart(2, '0')}` : '';
+
+        let asuntoFinal, cuerpoMensaje;
+
+        if (modoActual === 'AMBIENTE') {
+            asuntoFinal   = `${banco}${ambiente} - Modificación Fechas de proceso: ${sistemasStr}${sucTexto}`;
+            cuerpoMensaje = `Estimados,\n\nPor favor, necesito utilizar las fechas para las operatorias y ambiente del asunto.\n\nCualquier inconveniente por favor avisar. Aguardo 5 minutos.`;
+        } else {
+            asuntoFinal   = `DEMO - ${banco} Testing - Modificación de fechas de proceso ${sistemasStr}${sucTexto}`;
+            cuerpoMensaje = `Estimados,\n\nNecesito modificar las fechas de proceso de test para ${sistemasStr}. Por favor no tocar las fechas desde las ${hora}.`;
+        }
+
+        btn.disabled    = true;
+        btn.textContent = '⏳ Enviando...';
+        progress.classList.add('visible');
+        progLabel.textContent = `Enviando a ${GRUPO}...`;
+        progFill.style.width  = '40%';
+
+        try {
+            await emailjs.send('service_bqs170i', 'template_sq4x9kh', {
+                to_email: GRUPO,
+                asunto:   asuntoFinal,
+                name:     "Solicitud fechas de proceso",
+                message:  cuerpoMensaje
+            });
+
+            progFill.style.width  = '100%';
+            progLabel.textContent = '¡Enviado correctamente!';
+            showToast('✓ Solicitud enviada al grupo funcionales');
+
+        } catch (err) {
+            console.error('Error EmailJS:', err);
+            progLabel.textContent = 'Error al enviar';
+            showToast('Error al enviar. Revisá la consola.', 'error');
+        }
+
+        setTimeout(() => {
+            btn.disabled    = false;
+            btn.textContent = '🚀 Enviar Solicitud';
+            progress.classList.remove('visible');
+            progFill.style.width = '0%';
+        }, 2000);
+    }
+</script>
+</body>
+</html>
