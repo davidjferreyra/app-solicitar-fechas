@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Solicitud de Ambiente</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- EmailJS eliminado — se usa Google Apps Script -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -423,7 +423,7 @@
 
         <!-- Progress -->
         <div class="send-progress" id="sendProgress">
-            <div class="progress-label" id="progressLabel">Enviando 0 / 0...</div>
+            <div class="progress-label" id="progressLabel">Enviando...</div>
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
@@ -444,13 +444,15 @@
     let modoActual = 'AMBIENTE';
     let seleccionados = [];
 
-    // ─── EmailJS init ─────────────────────────────────────────
-    (function() { emailjs.init("eWZks18eBjEaSKKXz"); })();
+    // ─── ⚠️ REEMPLAZÁ ESTA URL CON LA DE TU APPS SCRIPT ──────────────────────
+    // Después de deployar tu Web App en script.google.com, pegá acá la URL:
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnD-cwLIrvkQgp3tUkgFYz2XCiNawg0dDxyzJv8afKKXrRYpuM7PXeTiT9lgFf-iOW/exec";
+    // ─────────────────────────────────────────────────────────────────────────
 
-    // ─── Destinatario grupo ──grupo_funcionales@censys.com.ar──────davidjoaquin09@gmail.com───────────────────────────
-    const GRUPO = "grupo_funcionales@censys.com.ar";
+    // ─── Destinatario ────────────────────────────────────────────────────────
+    const GRUPO = "grupo_mantenimiento@censys.com.ar, grupo_qcs_censys@censys.com.ar, grupo_programadores@censys.com.ar, grupo_funcionales@censys.com.ar";
 
-    // ─── Toast helper ─────────────────────────────────────────
+    // ─── Toast helper ────────────────────────────────────────────────────────
     function showToast(msg, type = 'success') {
         const toast = document.getElementById('toast');
         document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
@@ -460,7 +462,7 @@
         setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
-    // ─── Cambiar sección ──────────────────────────────────────
+    // ─── Cambiar sección ─────────────────────────────────────────────────────
     function cambiarSeccion(seccion) {
         modoActual = seccion;
         document.getElementById('tab1').classList.toggle('active', seccion === 'AMBIENTE');
@@ -479,7 +481,7 @@
         }
     }
 
-    // ─── Tags ─────────────────────────────────────────────────
+    // ─── Tags ────────────────────────────────────────────────────────────────
     function agregarTag(el) {
         if (el.value && !seleccionados.includes(el.value)) {
             seleccionados.push(el.value);
@@ -506,21 +508,17 @@
         }
     }
 
-    // ─── Envío ────────────────────────────────────────────────
-    // SOLUCIÓN: se envía un email por destinatario usando el campo
-    // "to_email" en templateParams, que el template usa como "To Email".
-    // Esto garantiza que TODOS reciben el correo sin depender
-    // del campo hardcodeado en EmailJS.
+    // ─── Envío via Google Apps Script ────────────────────────────────────────
     async function enviar() {
         if (seleccionados.length === 0) {
             showToast('Seleccioná al menos un sistema', 'error');
             return;
         }
 
-        const btn        = document.getElementById('btnEnviar');
-        const progress   = document.getElementById('sendProgress');
-        const progFill   = document.getElementById('progressFill');
-        const progLabel  = document.getElementById('progressLabel');
+        const btn       = document.getElementById('btnEnviar');
+        const progress  = document.getElementById('sendProgress');
+        const progFill  = document.getElementById('progressFill');
+        const progLabel = document.getElementById('progressLabel');
 
         const banco      = document.getElementById('banco').value;
         const ambiente   = document.getElementById('ambiente').value;
@@ -546,11 +544,17 @@
         progFill.style.width  = '40%';
 
         try {
-            await emailjs.send('service_bqs170i', 'template_sq4x9kh', {
-                to_email: GRUPO,
-                asunto:   asuntoFinal,
-                name:     "Solicitud fechas de proceso",
-                message:  cuerpoMensaje
+            // Google Apps Script requiere no-cors desde GitHub Pages
+            // Por eso usamos mode: 'no-cors' y asumimos éxito si no hay network error
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    to_email: GRUPO,
+                    asunto:   asuntoFinal,
+                    message:  cuerpoMensaje
+                })
             });
 
             progFill.style.width  = '100%';
@@ -558,9 +562,9 @@
             showToast('✓ Solicitud enviada al grupo funcionales');
 
         } catch (err) {
-            console.error('Error EmailJS:', err);
+            console.error('Error al enviar:', err);
             progLabel.textContent = 'Error al enviar';
-            showToast('Error al enviar. Revisá la consola.', 'error');
+            showToast('Error de red. Revisá tu conexión.', 'error');
         }
 
         setTimeout(() => {
