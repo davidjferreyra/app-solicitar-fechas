@@ -380,6 +380,12 @@
             <input type="time" id="horaDemo" value="14:30">
         </div>
 
+        <!-- Nombre QC -->
+        <div class="field">
+            <label>Nombre del QC</label>
+            <input type="text" id="nombreQC" placeholder="Tu nombre completo">
+        </div>
+
         <!-- Sucursal -->
         <div class="field">
             <label>Sucursal <span style="font-weight:400;opacity:0.5">(Opcional)</span></label>
@@ -522,6 +528,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-a
         const progFill  = document.getElementById('progressFill');
         const progLabel = document.getElementById('progressLabel');
 
+        const nombreQC   = document.getElementById('nombreQC').value.trim();
         const banco      = document.getElementById('banco').value;
         const ambiente   = document.getElementById('ambiente').value;
         const suc        = document.getElementById('sucursal').value.trim();
@@ -529,14 +536,21 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-a
         const sistemasStr = seleccionados.join(' - ');
         const sucTexto   = suc ? ` - Suc ${suc.padStart(2, '0')}` : '';
 
+        if (!nombreQC) {
+            showToast('Ingresá tu nombre de QC', 'error');
+            return;
+        }
+
+        const encabezado = `QC solicitante: ${nombreQC}\n\n`;
+
         let asuntoFinal, cuerpoMensaje;
 
         if (modoActual === 'AMBIENTE') {
             asuntoFinal   = `${banco}${ambiente} - Modificación Fechas de proceso: ${sistemasStr}${sucTexto}`;
-            cuerpoMensaje = `Estimados,\n\nPor favor, necesito utilizar las fechas para las operatorias y ambiente del asunto.\n\nCualquier inconveniente por favor avisar. Aguardo 5 minutos.`;
+            cuerpoMensaje = `${encabezado}Estimados,\n\nPor favor, necesito utilizar las fechas para las operatorias y ambiente del asunto.\n\nCualquier inconveniente por favor avisar. Aguardo 5 minutos.`;
         } else {
             asuntoFinal   = `DEMO - ${banco} Testing - Modificación de fechas de proceso ${sistemasStr}${sucTexto}`;
-            cuerpoMensaje = `Estimados,\n\nNecesito modificar las fechas de proceso de test para ${sistemasStr}. Por favor no tocar las fechas desde las ${hora}.`;
+            cuerpoMensaje = `${encabezado}Estimados,\n\nNecesito modificar las fechas de proceso de test para ${sistemasStr}. Por favor no tocar las fechas desde las ${hora}.`;
         }
 
         btn.disabled    = true;
