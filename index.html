@@ -353,18 +353,19 @@
         <!-- Banco + Ambiente -->
         <div class="section-title">Configuración</div>
         <div class="grid">
-            <div class="field">
-                <label>Banco</label>
-                <select id="banco">
-                    <option value="BSR">BSR</option>
-                    <option value="BMR">BMR</option>
-                    <option value="BMRMH">BMRMH</option>
-                    <option value="CMF">CMF</option>
-                    <option value="BSE">BSE</option>
-                    <option value="VOII">VOII</option>
-                    <option value="BP-PIANO">BP-PIANO</option>
-                </select>
-            </div>
+        <div class="field">
+            <label>Banco</label>
+            <select id="banco">
+                <option value="" disabled selected>Seleccionar banco...</option>
+                <option value="BSR">BSR</option>
+                <option value="BMR">BMR</option>
+                <option value="BMRMH">BMRMH</option>
+                <option value="CMF">CMF</option>
+                <option value="BSE">BSE</option>
+                <option value="VOII">VOII</option>
+                <option value="BP-PIANO">BP-PIANO</option>
+            </select>
+        </div>
             <div class="field">
                 <label>Ambiente</label>
                 <select id="ambiente">
@@ -536,6 +537,11 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-a
         const hora       = document.getElementById('horaDemo').value;
         const sistemasStr = seleccionados.join(' - ');
         const sucTexto   = suc ? ` - Suc ${suc.padStart(2, '0')}` : '';
+
+        if (!banco) {
+            showToast('Seleccioná el banco antes de enviar', 'error');
+            return;
+        }
 
         if (!nombreQC) {
             showToast('Ingresá tu nombre de QC', 'error');
