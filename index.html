@@ -458,12 +458,8 @@
     let modoActual = 'AMBIENTE';
     let seleccionados = [];
 
-    // ─── ⚠️ REEMPLAZÁ ESTA URL CON LA DE TU APPS SCRIPT ──────────────────────
-    // Después de deployar tu Web App en script.google.com, pegá acá la URL:
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-aWd8KWuuWqW8PLCSQsSsYyLLZuf24lSeYgeZnLK2KzH15_tt7x6Rixw/exec";
-    // ─────────────────────────────────────────────────────────────────────────
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx84wB2fIwcyIT45VN-pWgiieIeDpDKhI-EndVncWBqBJvNeGdHz6-68NBzOwYiTJea/exec";
 
-    // ─── Destinatario ────────────────────────────────────────────────────────
     const GRUPO = "grupo_mantenimiento@censys.com.ar, grupo_qcs_censys@censys.com.ar, grupo_programadores@censys.com.ar, grupo_funcionales@censys.com.ar";
 
     // ─── Toast helper ────────────────────────────────────────────────────────
@@ -571,8 +567,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-a
         progFill.style.width  = '40%';
 
         try {
-            // Google Apps Script requiere no-cors desde GitHub Pages
-            // Por eso usamos mode: 'no-cors' y asumimos éxito si no hay network error
             await fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -580,7 +574,9 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNgl-Qd89TRy-a
                 body: JSON.stringify({
                     to_email: GRUPO,
                     asunto:   asuntoFinal,
-                    message:  cuerpoMensaje
+                    message:  cuerpoMensaje,
+                    nombre:   nombreQC,      // ← nombre del solicitante para el remitente
+                    reply_to: ""
                 })
             });
 
