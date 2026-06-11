@@ -40,21 +40,14 @@
 
         .page-wrapper {
             width: 100%;
-            max-width: 1040px;
+            max-width: 480px;
         }
 
         .page-layout {
             width: 100%;
-            display: grid;
-            grid-template-columns: 480px 1fr;
-            gap: 24px;
-            align-items: start;
         }
 
-        @media (max-width: 900px) {
-            .page-wrapper { max-width: 480px; }
-            .page-layout { grid-template-columns: 1fr; }
-        }
+
 
         /* ── HEADER ── */
         .header { text-align: center; margin-bottom: 20px; }
@@ -275,211 +268,7 @@
 
         #seccionHora { display: none; }
 
-        /* ══════════════════════════════════════
-           LOG DE AMBIENTES
-        ══════════════════════════════════════ */
-        .log-col { display: flex; flex-direction: column; }
 
-        .log-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.03),
-                0 24px 48px -12px rgba(0,0,0,0.6),
-                inset 0 1px 0 rgba(255,255,255,0.04);
-            flex: 1;
-        }
-
-        .log-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .log-header-left {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .log-reset-info {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--muted);
-            opacity: 0.6;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .log-counter {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            background: var(--primary-glow);
-            border: 1px solid rgba(59,130,246,0.3);
-            color: var(--primary);
-            padding: 2px 8px;
-            border-radius: 100px;
-        }
-
-        .log-empty {
-            text-align: center;
-            padding: 40px 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            color: var(--muted);
-            opacity: 0.5;
-            line-height: 1.8;
-        }
-
-        .log-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 560px;
-            overflow-y: auto;
-            padding-right: 2px;
-        }
-
-        .log-list::-webkit-scrollbar { width: 4px; }
-        .log-list::-webkit-scrollbar-track { background: transparent; }
-        .log-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 100px; }
-
-        /* ── LOG ITEM ── */
-        .log-item {
-            background: var(--surface);
-            border-radius: 10px;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            animation: log-in 0.25s ease;
-            transition: border-color 0.3s, opacity 0.3s;
-        }
-        @keyframes log-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-
-        .log-item.active  { border-color: rgba(16,185,129,0.3); }
-        .log-item.expired { border-color: rgba(239,68,68,0.2); opacity: 0.65; }
-
-        .log-item-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .log-nombre {
-            font-family: 'Syne', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .status-dot.active  { background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,0.7); animation: blink 2s ease-in-out infinite; }
-        .status-dot.expired { background: var(--red); box-shadow: 0 0 4px rgba(239,68,68,0.5); }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .log-time {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--muted);
-            opacity: 0.7;
-        }
-
-        .log-meta {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .log-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 5px;
-            letter-spacing: 0.04em;
-        }
-
-        .log-badge.banco {
-            background: rgba(6,182,212,0.12);
-            border: 1px solid rgba(6,182,212,0.3);
-            color: var(--cyan);
-        }
-        .log-badge.ambiente {
-            background: rgba(59,130,246,0.1);
-            border: 1px solid rgba(59,130,246,0.25);
-            color: var(--primary);
-        }
-        .log-badge.modo-demo {
-            background: rgba(245,158,11,0.1);
-            border: 1px solid rgba(245,158,11,0.25);
-            color: #f59e0b;
-        }
-
-        .log-sistemas {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--muted);
-            margin-top: 6px;
-            line-height: 1.5;
-            opacity: 0.8;
-        }
-
-        .log-separator {
-            height: 1px;
-            background: var(--border);
-            margin: 10px 0 8px;
-            opacity: 0.5;
-            position: relative;
-        }
-
-        .log-separator-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--card);
-            padding: 0 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            color: var(--muted);
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            white-space: nowrap;
-        }
-
-        .log-countdown {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.58rem;
-            color: var(--green);
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        .log-item.expired .log-countdown {
-            color: var(--red);
-        }
     </style>
 </head>
 <body>
@@ -592,24 +381,6 @@
         </div>
     </div>
 
-    <!-- ══ COLUMNA DERECHA: LOG ══ -->
-    <div class="log-col">
-        <div class="log-card">
-            <div class="log-header">
-                <div class="log-header-left">
-                    📋 Log de Ambientes
-                    <span class="log-counter" id="logCounter">0</span>
-                </div>
-                <div class="log-reset-info">🕖 Reset a las 07:00</div>
-            </div>
-            <div id="logContent">
-                <div class="log-empty">
-                    Sin actividad aún.<br>
-                    Los envíos aparecerán aquí.
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 
@@ -626,9 +397,6 @@
 
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx84wB2fIwcyIT45VN-pWgiieIeDpDKhI-EndVncWBqBJvNeGdHz6-68NBzOwYiTJea/exec";
     const GRUPO = "grupo_mantenimiento@censys.com.ar, grupo_qcs_censys@censys.com.ar, grupo_programadores@censys.com.ar, grupo_funcionales@censys.com.ar,dferreyra@censys.com.ar";
-    const LOG_KEY   = 'ambientes_log_v1';
-    const LOG_DATE_KEY = 'ambientes_log_date';
-    const EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 horas
 
     /* ─── TOAST ─── */
     function showToast(msg, type = 'success') {
@@ -699,165 +467,6 @@
         document.getElementById('selectSistemas').selectedIndex = 0;
     }
 
-    /* ─── LOG: PERSISTENCIA ─── */
-    function getTodayStr() {
-        const d = new Date();
-        return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-    }
-
-    function debeResetear() {
-        const stored = localStorage.getItem(LOG_DATE_KEY);
-        const now    = new Date();
-        const hoy    = getTodayStr();
-
-        // Si la fecha guardada es anterior a hoy Y ya pasaron las 07:00 → resetear
-        if (!stored) return true;
-
-        const [sy, sm, sd] = stored.split('-').map(Number);
-        const [ny, nm, nd] = [now.getFullYear(), now.getMonth(), now.getDate()];
-
-        const esDiaDiferente = (sy !== ny || sm !== nm || sd !== nd);
-        const yaEs7 = now.getHours() >= 7;
-
-        return esDiaDiferente && yaEs7;
-    }
-
-    function cargarLog() {
-        if (debeResetear()) {
-            localStorage.removeItem(LOG_KEY);
-            localStorage.setItem(LOG_DATE_KEY, getTodayStr());
-            return [];
-        }
-        try {
-            return JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
-        } catch { return []; }
-    }
-
-    function guardarLog(entries) {
-        localStorage.setItem(LOG_KEY, JSON.stringify(entries));
-        localStorage.setItem(LOG_DATE_KEY, getTodayStr());
-    }
-
-    function agregarEntradaLog(nombre, banco, ambiente, sistemas, modo) {
-        const entries = cargarLog();
-        entries.unshift({
-            id:       Date.now(),
-            nombre,
-            banco,
-            ambiente,
-            sistemas,
-            modo,
-            timestamp: Date.now()
-        });
-        guardarLog(entries);
-        renderLog();
-    }
-
-    /* ─── LOG: RENDER ─── */
-    function formatHora(ts) {
-        const d = new Date(ts);
-        const h = String(d.getHours()).padStart(2, '0');
-        const m = String(d.getMinutes()).padStart(2, '0');
-        return `${h}:${m}`;
-    }
-
-    function formatCountdown(ts) {
-        const elapsed = Date.now() - ts;
-        if (elapsed >= EXPIRY_MS) return null; // ya expiró
-        const remaining = EXPIRY_MS - elapsed;
-        const mins = Math.floor(remaining / 60000);
-        const secs = Math.floor((remaining % 60000) / 1000);
-        return `${mins}m ${String(secs).padStart(2,'0')}s restante`;
-    }
-
-    function renderLog() {
-        const entries = cargarLog();
-        const counter = document.getElementById('logCounter');
-        const content = document.getElementById('logContent');
-
-        counter.textContent = entries.length;
-
-        if (entries.length === 0) {
-            content.innerHTML = `<div class="log-empty">Sin actividad aún.<br>Los envíos aparecerán aquí.</div>`;
-            return;
-        }
-
-        const activos   = entries.filter(e => (Date.now() - e.timestamp) < EXPIRY_MS);
-        const expirados = entries.filter(e => (Date.now() - e.timestamp) >= EXPIRY_MS);
-
-        let html = '';
-
-        if (activos.length > 0) {
-            html += activos.map(e => renderItem(e, 'active')).join('');
-        }
-
-        if (activos.length > 0 && expirados.length > 0) {
-            html += `<div class="log-separator"><span class="log-separator-label">Más de 2hs</span></div>`;
-        }
-
-        if (expirados.length > 0) {
-            html += expirados.map(e => renderItem(e, 'expired')).join('');
-        }
-
-        content.innerHTML = `<div class="log-list">${html}</div>`;
-    }
-
-    function renderItem(e, status) {
-        const countdown = status === 'active' ? formatCountdown(e.timestamp) : null;
-        const modoBadge  = e.modo === 'DEMO'
-            ? `<span class="log-badge modo-demo">DEMO</span>`
-            : '';
-
-        return `
-        <div class="log-item ${status}" id="log-${e.id}">
-            <div class="log-item-header">
-                <div class="log-nombre">
-                    <span class="status-dot ${status}"></span>
-                    ${escapeHtml(e.nombre)}
-                </div>
-                <span class="log-time">${formatHora(e.timestamp)}</span>
-            </div>
-            <div class="log-meta">
-                <span class="log-badge banco">${escapeHtml(e.banco)}</span>
-                <span class="log-badge ambiente">${escapeHtml(e.ambiente)}</span>
-                ${modoBadge}
-            </div>
-            <div class="log-sistemas">${escapeHtml(e.sistemas)}</div>
-            ${countdown ? `<div class="log-countdown" id="cd-${e.id}">⏱ ${countdown}</div>` : ''}
-        </div>`;
-    }
-
-    function escapeHtml(str) {
-        return String(str)
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    /* ─── TICK: actualiza countdowns y re-ordena cuando algo expira ─── */
-    let lastActiveCount = -1;
-
-    function tick() {
-        const entries = cargarLog();
-        if (entries.length === 0) return;
-
-        const activeNow = entries.filter(e => (Date.now() - e.timestamp) < EXPIRY_MS).length;
-
-        // Si cambió la cantidad de activos → re-render completo (reordenar)
-        if (activeNow !== lastActiveCount) {
-            lastActiveCount = activeNow;
-            renderLog();
-            return;
-        }
-
-        // Solo actualizar los countdowns de los activos
-        entries.forEach(e => {
-            const cdEl = document.getElementById(`cd-${e.id}`);
-            if (!cdEl) return;
-            const cd = formatCountdown(e.timestamp);
-            if (cd) cdEl.textContent = `⏱ ${cd}`;
-        });
-    }
-
     /* ─── ENVIAR ─── */
     async function enviar() {
         if (seleccionados.length === 0) {
@@ -915,8 +524,6 @@
             progLabel.textContent = '¡Enviado correctamente!';
             showToast('✓ Solicitud enviada al grupo funcionales');
 
-            // Agregar al log
-            agregarEntradaLog(nombreQC, banco, ambiente, sistemasStr, modoActual);
             limpiarFormulario();
 
         } catch (err) {
@@ -934,8 +541,6 @@
     }
 
     /* ─── INIT ─── */
-    renderLog();
-    setInterval(tick, 1000);
 </script>
 </body>
 </html>
